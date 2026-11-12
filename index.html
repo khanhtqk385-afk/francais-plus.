@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Français Plus A1–B2</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f5fb;color:#202943}
+header{background:#253b80;color:white;padding:25px 18px;text-align:center}
+header h1{margin:0;font-size:27px}
+header p{margin-bottom:0}
+main{max-width:850px;margin:22px auto;padding:0 14px}
+.card{background:white;border-radius:15px;padding:20px;margin-bottom:17px;box-shadow:0 3px 12px #0000000c}
+h2{color:#253b80}
+select,button{padding:12px;border-radius:9px;border:1px solid #ccd2e0;font-size:16px}
+select{width:100%;margin:7px 0 14px;background:white}
+button{background:#304c9b;color:white;border:0;cursor:pointer}
+button:disabled{opacity:.5}
+.option{display:block;padding:13px;margin:9px 0;border:1px solid #d9deea;border-radius:9px;cursor:pointer}
+.option:has(input:checked){background:#edf1ff;border-color:#526ec0}
+.option input{margin-right:9px}
+#feedback{padding:12px;border-radius:9px;margin-top:15px;display:none}
+.good{background:#e5f7eb;color:#176534}
+.bad{background:#fff0e9;color:#9a351c}
+.small{color:#68728a;font-size:14px}
+.progress{height:9px;background:#e6e9f1;border-radius:10px;overflow:hidden}
+#bar{height:100%;background:#4969c0;width:0}
+footer{text-align:center;color:#68728a;padding:25px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🇫🇷 FRANÇAIS PLUS</h1>
+<p>Apprendre · Pratiquer · Progresser</p>
+<p>A1 – A2 – B1 – B2</p>
+</header>
+
+<main>
+<section class="card">
+<h2>📚 Chọn bài học</h2>
+<label>Trình độ / Niveau</label>
+<select id="level" onchange="loadQuestions()">
+<option value="A1">A1 – Débutant</option>
+<option value="A2">A2 – Élémentaire</option>
+<option value="B1">B1 – Intermédiaire</option>
+<option value="B2">B2 – Avancé</option>
+</select>
+
+<label>Unité / Bài học</label>
+<select id="unit" onchange="loadQuestions()">
+<option value="1">Unité 1</option>
+<option value="2">Unité 2</option>
+<option value="3">Unité 3</option>
+<option value="4">Unité 4</option>
+<option value="5">Unité 5</option>
+<option value="6">Unité 6</option>
+<option value="7">Unité 7</option>
+<option value="8">Unité 8</option>
+<option value="9">Unité 9</option>
+<option value="10">Unité 10</option>
+<option value="11">Unité 11</option>
+<option value="12">Unité 12</option>
+</select>
+
+<label>Loại bài tập / Activité</label>
+<select id="category" onchange="loadQuestions()">
+<option value="all">Tất cả bài tập</option>
+<option value="grammar">Grammaire – Ngữ pháp</option>
+<option value="vocabulary">Vocabulaire – Từ vựng</option>
+</select>
+</section>
+
+<section class="card">
+<h2 id="lesson">A1 · Unité 1</h2>
+<div class="progress"><div id="bar"></div></div>
+<p class="small" id="counter"></p>
+<h3 id="question"></h3>
+<div id="options"></div>
+<button id="check" onclick="checkAnswer()">Kiểm tra đáp án</button>
+<div id="feedback"></div>
+<button id="next" onclick="nextQuestion()" style="display:none;margin-top:12px">Câu tiếp theo →</button>
+</section>
+
+<section class="card">
+<h2>📊 Kết quả học tập</h2>
+<p>Điểm hiện tại: <b id="score">0</b></p>
+<p>Số câu đã trả lời: <b id="total">0</b></p>
+<p class="small">Kết quả được lưu trên trình duyệt này.</p>
+<button onclick="resetScore()">Đặt lại kết quả</button>
+</section>
+</main>
+
+<footer>
+FRANÇAIS PLUS · Apprendre le français ensemble
+</footer>
+
+<script>
+const questions = [
+{
+level:"A1",unit:1,type:"grammar",
+q:"Je _____ étudiant.",
+options:["suis","es","est","ai"],
+answer:0,
+fr:"Le verbe être se conjugue « je suis ».",
+vi:"Động từ être chia với je là suis."
+},
+{
+level:"A1",unit:1,type:"vocabulary",
+q:"Que signifie « Bonjour » ?",
+options:["Tạm biệt","Xin chào","Cảm ơn","Xin lỗi"],
+answer:1,
+fr:"Bonjour est une formule de salutation.",
+vi:"Bonjour có nghĩa là xin chào."
+},
+{
+level:"A1",unit:7,type:"grammar",
+q:"Hier, nous _____ au musée.",
+options:["sommes allés","allons","irons","aller"],
+answer:0,
+fr:"Le verbe aller utilise être au passé composé.",
+vi:"Động từ aller sử dụng être ở passé composé."
+},
+{
+level:"A1",unit:8,type:"vocabulary",
+q:"Quel mot désigne une partie du corps ?",
+options:["Une chaise","Une fenêtre","La tête","Une maison"],
+answer:2,
+fr:"La tête est une partie du corps.",
+vi:"La tête có nghĩa là đầu."
+},
+{
+level:"A2",unit:1,type:"grammar",
+q:"Quand j'étais petit, je _____ au parc.",
+options:["joue","jouais","jouerai","jouer"],
+answer:1,
+fr:"L'imparfait exprime une habitude passée.",
+vi:"Imparfait diễn tả thói quen trong quá khứ."
+},
+{
+level:"B1",unit:1,type:"grammar",
+q:"Il faut que tu _____ tes devoirs.",
+options:["fais","feras","fasses","faire"],
+answer:2,
+fr:"Il faut que est suivi du subjonctif.",
+vi:"Il faut que đi với động từ ở thức subjonctif."
+},
+{
+level:"B2",unit:1,type:"grammar",
+q:"Bien qu'il _____ fatigué, il continue à travailler.",
+options:["est","soit","sera","être"],
+answer:1,
+fr:"Bien que est suivi du subjonctif.",
+vi:"Bien que thường được theo sau bởi subjonctif."
+}
+];
+
+let current = [];
+let index = 0;
+let answered = false;
+
+let score = Number(localStorage.getItem("fp_score") || 0);
+let total = Number(localStorage.getItem("fp_total") || 0);
+
+function updateStats(){
+ document.getElementById("score").textContent=score;
+ document.getElementById("total").textContent=total;
+}
+
+function loadQuestions(){
+ const level=document.getElementById("level").value;
+ const unit=Number(document.getElementById("unit").value);
+ const category=document.getElementById("category").value;
+
+ current=questions.filter(q=>
+ q.level===level &&
+ q.unit===unit &&
+ (category==="all" || q.type===category)
+ );
+
+ index=0;
+ showQuestion();
+}
+
+function showQuestion(){
+ answered=false;
+ const q=current[index];
+ document.getElementById("feedback").style.display="none";
+ document.getElementById("next").style.display="none";
+ document.getElementById("check").style.display="inline-block";
+
+ if(!q){
+ document.getElementById("question").textContent=
+ "Chưa có câu hỏi trong bài này. Hãy bổ sung dữ liệu cho unité!";
+ document.getElementById("options").innerHTML="";
+ document.getElementById("counter").textContent="0 câu hỏi";
+ document.getElementById("bar").style.width="0%";
+ document.getElementById("check").style.display="none";
+ return;
+ }
+
+ document.getElementById("lesson").textContent=
+ q.level+" · Unité "+q.unit;
+
+ document.getElementById("counter").textContent=
+ "Question "+(index+1)+" / "+current.length;
+
+ document.getElementById("question").textContent=q.q;
+
+ document.getElementById("bar").style.width=
+ ((index+1)/current.length*100)+"%";
+
+ document.getElementById("options").innerHTML=
+ q.options.map((v,i)=>`
+ <label class="option">
+ <input type="radio" name="answer" value="${i}">
+ ${String.fromCharCode(65+i)}. ${v}
+ </label>`).join("");
+}
+
+function checkAnswer(){
+ if(answered)return;
+ const selected=document.querySelector('input[name="answer"]:checked');
+ if(!selected){
+ alert("Veuillez choisir une réponse !");
+ return;
+ }
+
+ answered=true;
+ const q=current[index];
+ const correct=Number(selected.value)===q.answer;
+
+ total++;
+ if(correct)score++;
+
+ localStorage.setItem("fp_score",score);
+ localStorage.setItem("fp_total",total);
+ updateStats();
+
+ const box=document.getElementById("feedback");
+ box.style.display="block";
+ box.className=correct?"good":"bad";
+
+ box.innerHTML=`
+ <b>${correct?"Bonne réponse !":"Réponse incorrecte !"}</b>
+ <p>Đáp án: ${q.options[q.answer]}</p>
+ <p><b>Français:</b> ${q.fr}</p>
+ <p><b>Tiếng Việt:</b> ${q.vi}</p>`;
+
+ document.getElementById("check").style.display="none";
+ document.getElementById("next").style.display="inline-block";
+}
+
+function nextQuestion(){
+ if(index<current.length-1){
+ index++;
+ showQuestion();
+ }else{
+ document.getElementById("question").textContent=
+ "Félicitations ! Bạn đã hoàn thành bài học.";
+ document.getElementById("options").innerHTML="";
+ document.getElementById("feedback").style.display="none";
+ document.getElementById("check").style.display="none";
+ document.getElementById("next").style.display="none";
+ }
+}
+
+function resetScore(){
+ if(confirm("Bạn có chắc muốn đặt lại điểm?")){
+ score=0;total=0;
+ localStorage.setItem("fp_score",0);
+ localStorage.setItem("fp_total",0);
+ updateStats();
+ }
+}
+
+updateStats();
+loadQuestions();
+</script>
+</body>
+</html>
